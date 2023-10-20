@@ -1,11 +1,11 @@
 from django.shortcuts import render
+from .models import *
 
 # Create your views here.
 def auth(request):
+    data = Users.objects.all()
     return render(request, 'auth.html')
+
 def worker(request):
+    data = Users.objects.all()
     return render(request, 'worker.html')
-def chief(request):
-    return render(request, 'chief.html')
-def high_worker(request):
-    return render(request, 'high_worker.html')
