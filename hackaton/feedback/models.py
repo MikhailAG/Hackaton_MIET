@@ -12,8 +12,6 @@ class Roles(models.Model):
 class Feedbacks(models.Model):
     body = models.TextField()
     stars = models.IntegerField(max_length=1)
-    user = models.ForeignKey("Users", on_delete=models.CASCADE)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='received_feedbacks')
+    from_user = models.ForeignKey(Users, on_delete=models.CASCADE,  related_name='given_feedbacks')
     body_english = models.TextField(blank=True, null=True)
-
-class Aboba(models.Model):
-    penis = models.TextField()

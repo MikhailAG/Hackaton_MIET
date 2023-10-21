@@ -27,17 +27,17 @@ def to_eng(text):
 
 roles = [1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
-Roles.objects.create(name='boss')
-Roles.objects.create(name='teamlead')
-Roles.objects.create(name='batrak')
+# Roles.objects.create(name='Director')
+# Roles.objects.create(name='Teamlead')
+# Roles.objects.create(name='Intern')
 
-for i in range(50):
-  Users.objects.create(
-    name=names.get_full_name(),
-    username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
-    password=str(random.randint(1, 1000)),
-    role=Roles.objects.order_by('?').first()
-  )
+# for i in range(50):
+#   Users.objects.create(
+#     name=names.get_full_name(),
+#     username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
+#     password=str(random.randint(1, 1000)),
+#     role=Roles.objects.order_by('?').first()
+#   )
 employee_reviews = [
     "Сотрудник отлично справляется с задачами и всегда приходит на помощь.",
     "Отличный коллега, всегда готов помочь и делать дополнительные усилия.",
@@ -60,12 +60,13 @@ employee_reviews = [
     "Сотрудник принимает инициативу и приходит с интересными идеями для улучшения процессов.",
     "Этот сотрудник всегда надежен и ответственен, его коммуникация с коллегами превосходна.",
     "Сотрудник оправдывает все ожидания, его работа на высшем уровне и всегда своевременна.",
-]*10
+]*8
 
 for text in employee_reviews:
   Feedbacks.objects.create(
     body=text,
     body_english=to_eng(text),
     stars=sentiment(text),
-    user=Users.objects.order_by('?').first()
+    user=Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first(),
+    from_user=Users.objects.filter(role= Roles.objects.filter(name='Teamlead').first()).order_by('?').first()
   )
