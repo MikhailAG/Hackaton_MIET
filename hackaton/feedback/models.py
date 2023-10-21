@@ -16,3 +16,9 @@ class Feedbacks(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='received_feedbacks')
     from_user = models.ForeignKey(Users, on_delete=models.CASCADE,  related_name='given_feedbacks')
     body_english = models.TextField(blank=True, null=True)
+
+class Notifications(models.Model):
+    comment = models.TextField()
+    lead = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='received_notifications')
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='sent_notifications')
+
