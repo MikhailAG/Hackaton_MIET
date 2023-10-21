@@ -73,11 +73,10 @@ for i in range(100):
   )
 
 for text in employee_reviews:
-  user = Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first()
   Feedbacks.objects.create(
     body=text,
     body_english=translate_to_english(text),
     stars=sentiment(text),
-    user=user,
-    from_user=user.lead_user
+    user=Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first(),
+    from_user=Users.objects.filter(role= Roles.objects.filter(name='Teamlead').first()).order_by('?').first()
   )
