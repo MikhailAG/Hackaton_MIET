@@ -8,34 +8,36 @@
   <title>FeedbackApp</title>
 </head>
 <div class="employee-page">
-		<h1 class="card-fullname">{{ intern.name }}</h1>
-		<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
-		<form method="POST">
-			{% csrf_token %}
-			<button class="app-content-headerButton" type="submit">Интегральный отзыв</button>
-			<div id="integral_text" class="task"></div>
-		</form>
-		<div class="feedbacks">
-			{% if feedback.first.body == '' %}
-				<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
-			{% endif %}
-			{% for fb in feedback %}
-			<div class="feedback-row">
-			<div class='task'>
-			  <div class="name-status">
-				  <div class="product-cell status-cell">
-				  <span class="status {%if fb.stars == 1%}negative{%endif%}
-					{%if fb.stars == 2%}neutral{%endif%}
-					{%if fb.stars == 3%}positive{%endif%}">
-					{%if fb.stars == 1%}Негативный{%endif%}
-					{%if fb.stars == 2%}Нейтральный{%endif%}
-				    {%if fb.stars == 3%}Позитивный{%endif%}</span>
-				  </div>
+	<h1 class="card-fullname">{{ intern.name }}</h1>
+	<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
+	<form method="POST">
+		{% csrf_token %}
+		<button class="app-content-headerButton" type="submit">Интегральный отзыв</button>
+		<div id="integral_text" class="task"></div>
+	</form>
+	{% if intern.role.name == 'Intern'%}
+	<div class="feedbacks">
+		{% if feedback.first.body == '' %}
+			<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
+		{% endif %}
+		{% for fb in feedback %}
+		<div class="feedback-row">
+		<div class='task'>
+		  <div class="name-status">
+			  <div class="product-cell status-cell">
+			  <span class="status {%if fb.stars == 1%}negative{%endif%}
+				{%if fb.stars == 2%}neutral{%endif%}
+				{%if fb.stars == 3%}positive{%endif%}">
+				{%if fb.stars == 1%}Негативный{%endif%}
+				{%if fb.stars == 2%}Нейтральный{%endif%}
+				{%if fb.stars == 3%}Позитивный{%endif%}</span>
 			  </div>
-			  <p>{{ fb.body }}</p>
-			</div>
-			</div>
-			{% endfor %}
+		  </div>
+		  <p>{{ fb.body }}</p>
+		</div>
+		</div>
+		{% endfor %}
+		{% if current_user.role.name == 'Teamlead' %}
 		<div class="employee-container">
 		  <form method="POST">
 				{% csrf_token %}
@@ -54,6 +56,29 @@
 			</div>
 		  </form>
 		</div>
+		{% else %}
+		<div class="text-center">
+		  <a href="all_workers"><button type="button" class="btn btn-exit employee">Назад</button></a>
+		</div>
+		{% endif %}
     </div>
+	{% endif %}
+	{% if intern.role.name == 'Teamlead'%}
+	<div class="feedbacks">
+		{% if lead_interns.first.name != '' %}
+			<h2 class="card-feedbacks">Стажеры сотрудника:</h2>
+		{% endif %}
+		{% for user in lead_interns %}
+		<a href="worker_user?id={{ user.id }}"><div class="feedback-row">
+			<div class='task'>
+			  <p>{{ user.name }}</p>
+			</div>
+		</div></a>
+		{% endfor %}
+    </div>
+	<div class="text-center">
+	  <a href="all_workers"><button type="button" class="btn btn-exit employee">Назад</button></a>
+	</div>
+	{% endif %}
 </div>
 {% endblock %}
