@@ -1,19 +1,19 @@
-import os, sys
+import sys
 import django
-import re
 import pymorphy3
-import nltk
-sys.path.append('/home/windof/hakaton/Hackaton_MIET/hackaton')
+from nltk import *
+
+sys.path.append('/Users/mikhail/PycharmProjects/Hackaton_MIET/hackaton')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hackaton.settings'
 django.setup()
+
 from feedback.models import Feedbacks
-from feedback.models import Users
 from feedback.scripts.textblob_script import sentiment
 from feedback.scripts.translator import translate_to_english
 
 morph = pymorphy3.MorphAnalyzer(lang='ru')
-nltk.download('stopwords')
-stops = nltk.corpus.stopwords.words('russian')
+download('stopwords')
+stops = corpus.stopwords.words('russian')
 unique_stops = set(stops)
 
 def get_feedback_objects(user, teamlead=None):

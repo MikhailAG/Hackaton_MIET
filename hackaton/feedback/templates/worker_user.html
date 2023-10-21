@@ -15,7 +15,7 @@
 		<button name="create-integral" class="app-content-headerButton" type="submit">Интегральный отзыв</button>
 		<div id="integral_text" class="disabled-div">{{ integral }}</div>
 	</form>
-	{% if intern.role.name == 'Intern'%}
+	{% if intern.role.name == 'Intern' %}
 	<div class="feedbacks">
 		{% if feedback.first.body == '' %}
 			<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
@@ -37,7 +37,7 @@
 		</div>
 		</div>
 		{% endfor %}
-		{% if current_user.role.name == 'Teamlead' %}
+		{% if current_user.role.name == 'Teamlead'%}
 		<div class="employee-container">
 		  <form method="POST">
 				{% csrf_token %}
@@ -63,7 +63,7 @@
 		{% endif %}
     </div>
 	{% endif %}
-	{% if intern.role.name == 'Teamlead'%}
+	{% if intern.role.name == 'Teamlead' and current_user.role.name == 'Director'%}
 	<div class="feedbacks">
 		{% if lead_interns.first.name != '' %}
 			<h2 class="card-feedbacks">Стажеры сотрудника:</h2>
@@ -79,6 +79,20 @@
 	<div class="text-center">
 	  <a href="all_workers"><button type="button" class="btn btn-exit employee">Назад</button></a>
 	</div>
+	{% endif %}
+	{% if intern.role.name == 'Teamlead' and current_user.role.name == 'Intern'%}
+	<div class="feedbacks">
+		<form method="POST">
+			<div class="btns">
+				<button type="button" class="btn choice-soft-skills">SOFT-SKILLS</button>
+				<input name='soft-skills' type="hidden" value=""/>
+				<button type="button" class="btn choice-hard-skills">HARD-SKILLS</button>
+				<input name='hard-skills' type="hidden" value=""/>
+			</div>
+			<button name="feedback-request" class="app-content-headerButton">Запросить отзыв</button>
+		</form>
+    </div>
+    <a href="all_workers"><button type="button" class="btn btn-exit employee" style="margin-top: 100px;">Назад</button></a>
 	{% endif %}
 </div>
 {% endblock %}
