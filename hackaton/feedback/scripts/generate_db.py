@@ -14,32 +14,32 @@ from feedback.scripts.translator import translate_to_english
 
 roles = [1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
-Roles.objects.create(name='Director')
-Roles.objects.create(name='Teamlead')
-Roles.objects.create(name='Intern')
-Users.objects.create(
-  name='Boss Krovososs',
-  username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
-  password=str(random.randint(1, 1000)),
-  role=Roles.objects.get(name='Director')
-)
-for i in range(10):
-  Users.objects.create(
-    name=names.get_full_name(),
-    username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
-    password=str(random.randint(1, 1000)),
-    role=Roles.objects.get(name='Teamlead'),
-    lead_user=Users.objects.get(name='Boss Krovososs')
-  )
-for i in range(50):
-  lead = Roles.objects.get(name='Teamlead').users_set.all().order_by('?').first()
-  Users.objects.create(
-    name=names.get_full_name(),
-    username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
-    password=str(random.randint(1, 1000)),
-    role=Roles.objects.get(name='Intern'),
-    lead_user=lead
-  )
+# Roles.objects.create(name='Director')
+# Roles.objects.create(name='Teamlead')
+# Roles.objects.create(name='Intern')
+# Users.objects.create(
+#   name='Boss Krovososs',
+#   username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
+#   password=str(random.randint(1, 1000)),
+#   role=Roles.objects.get(name='Director')
+# )
+# for i in range(10):
+#   Users.objects.create(
+#     name=names.get_full_name(),
+#     username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
+#     password=str(random.randint(1, 1000)),
+#     role=Roles.objects.get(name='Teamlead'),
+#     lead_user=Users.objects.get(name='Boss Krovososs')
+#   )
+# for i in range(50):
+#   lead = Roles.objects.get(name='Teamlead').users_set.all().order_by('?').first()
+#   Users.objects.create(
+#     name=names.get_full_name(),
+#     username=f"{names.get_first_name()}_{random.randint(1, 1488)}",
+#     password=str(random.randint(1, 1000)),
+#     role=Roles.objects.get(name='Intern'),
+#     lead_user=lead
+#   )
 employee_reviews = [
     "Сотрудник отлично справляется с задачами и всегда приходит на помощь.",
     "Отличный коллега, всегда готов помочь и делать дополнительные усилия.",
@@ -64,20 +64,19 @@ employee_reviews = [
     "Сотрудник оправдывает все ожидания, его работа на высшем уровне и всегда своевременна.",
 ]*8
 
-for i in range(100):
-  user = Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first()
-  Notifications.objects.create(
-    comment='Оцени мою работку пж',
-    user=user,
-    lead=user.lead_user
-  )
+# for i in range(100):
+#   user = Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first()
+#   Notifications.objects.create(
+#     comment='Оцени мою работку пж',
+#     user=user,
+#     lead=user.lead_user
+#   )
 
 for text in employee_reviews:
-  user = Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first()
   Feedbacks.objects.create(
     body=text,
     body_english=translate_to_english(text),
     stars=sentiment(text),
-    user=user,
-    from_user=user.lead_user
+    user=Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first(),
+    from_user=Users.objects.filter(role= Roles.objects.filter(name='Teamlead').first()).order_by('?').first()
   )
