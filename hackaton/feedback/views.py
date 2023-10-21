@@ -56,6 +56,19 @@ def worker_user(request):
         'feedback': feedback,
     }
 
+    if request.method == 'POST' and 'feedback-text' in request.POST:
+        print('In post')
+        feedback = request.POST['feedback-text']
+        body_english = translate_to_english(feedback)
+        Feedbacks.objects.create(
+            body=feedback,
+            body_english=body_english,
+            stars=sentiment(body_english),
+            user_id=intern_id,
+            from_user_id=settings.CURRENT_USER.id
+        )
+        print(Feedbacks.objects.last())
+
     return render(request, 'worker_user.html', context)
 
 def feedbacks_user(request):
@@ -107,16 +120,3 @@ def feedbacks_user(request):
     }
 
     return render(request, 'feedbacks_user.html', context)
-
-def worker_user(request):
-    if isinstance(settings.CURRENT_USER, str):
-        return HttpResponseRedirect('/')
-    if request.method == 'POST' and 'send-feedback' in request.POST:
-        feedback = request.POST['feedback-text']
-        body_english = translate_to_english(feedback)
-        Feedbacks.objects.create(
-            body=feedback,
-            body_english=body_english,
-            stars=sentiment(body_english)
-        )
-

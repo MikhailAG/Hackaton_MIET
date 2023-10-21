@@ -10,6 +10,11 @@
 <div class="employee-page">
 		<h1 class="card-fullname">{{ intern.name }}</h1>
 		<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
+		<form method="POST">
+			{% csrf_token %}
+			<button class="app-content-headerButton" type="submit">Интегральный отзыв</button>
+			<div id="integral_text" class="task"></div>
+		</form>
 		<div class="feedbacks">
 			{% if feedback.first.body == '' %}
 				<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
@@ -32,11 +37,13 @@
 			</div>
 			{% endfor %}
 		<div class="employee-container">
-		  <form method="post" name="send-feedback">
+		  <form method="POST">
+				{% csrf_token %}
 			<h1 class="title text-center mb-4">Написать отзыв:</h1>
 			<div class="form-group message">
 			  <textarea name="feedback-text" id="formMessage" class="form-control form-control-lg" rows="7" placeholder="пишите..."></textarea>
 			</div>
+			<input value="{{ intern.id }}" type="hidden" name="user-id"/>
 		    <div class="btns">
 			<div class="text-center">
 			  <a href="all_workers"><button type="button" class="btn btn-exit employee">Назад</button></a>

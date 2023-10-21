@@ -16,3 +16,5 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     }
 });
+
+document.getElementById('integral_text')
