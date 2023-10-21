@@ -5,19 +5,17 @@
     {% load static %}
     <title>FeedbackApp</title>
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-    <script src="{% static 'js/auth.js' %}"></script>
 </head>
 <body style="background-color: #f5f5f5;">
     <div class="login-page">
       <div class="form">
         <form method="POST" class="login-form">
           {% csrf_token %}
-          <input type="text" placeholder="username"/>
-          <input type="password" placeholder="password"/>
+          <input name='username' type="text" placeholder="username"/>
+          <input name='password' type="password" placeholder="password"/>
           <button class="login-button" name="login-app"><p>Вход</p></button>
         </form>
       </div>
     </div>
 </body>
 </html>
-<!-- TODO: сделать здесь нормальную систему аутентификации -->
