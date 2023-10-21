@@ -68,5 +68,3 @@ def normalize_phrase(phrase):
         return None
     transformed_adjective = parsed_adjective.inflect({case, number}).word
     return f"{transformed_adjective} {phrase.split(' ')[1]}"
-
-print(generate_feedback(Feedbacks.objects.order_by('?').first().user))
