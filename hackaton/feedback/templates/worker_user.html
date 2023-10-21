@@ -12,8 +12,8 @@
 	<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
 	<form method="POST">
 		{% csrf_token %}
-		<button class="app-content-headerButton" type="submit">Интегральный отзыв</button>
-		<div id="integral_text" class="task"></div>
+		<button name="create-integral" class="app-content-headerButton" type="submit">Интегральный отзыв</button>
+		<div id="integral_text" class="disabled-div">{{ integral }}</div>
 	</form>
 	{% if intern.role.name == 'Intern'%}
 	<div class="feedbacks">
@@ -42,7 +42,7 @@
 		  <form method="POST">
 				{% csrf_token %}
 			<h1 class="title text-center mb-4">Написать отзыв:</h1>
-			<div class="form-group message">
+			<div class="formhttps://www.gravatar.com/avatar/337e3dbd74fde6211d1a63f255ce5900?s=64&d=robohash-group message">
 			  <textarea name="feedback-text" id="formMessage" class="form-control form-control-lg" rows="7" placeholder="пишите..."></textarea>
 			</div>
 			<input value="{{ intern.id }}" type="hidden" name="user-id"/>

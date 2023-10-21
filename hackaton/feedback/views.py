@@ -5,6 +5,7 @@ from .scripts.auth_script import authfunc
 from django.conf import settings
 from feedback.scripts.translator import translate_to_english
 from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.generate_integral_feedback import generate_feedback
 
 Users = apps.get_model('feedback', 'Users')
 Feedbacks = apps.get_model('feedback', 'Feedbacks')
@@ -59,7 +60,6 @@ def worker_user(request):
     }
 
     if request.method == 'POST' and 'feedback-text' in request.POST:
-        print('In post')
         feedback = request.POST['feedback-text']
         body_english = translate_to_english(feedback)
         Feedbacks.objects.create(
@@ -70,6 +70,10 @@ def worker_user(request):
             from_user_id=settings.CURRENT_USER.id
         )
         print(Feedbacks.objects.last())
+
+    if request.method == 'POST' and 'create-integral' in request.POST:
+        integral = generate_feedback(intern)
+        context['integral'] = integral
 
     return render(request, 'worker_user.html', context)
 
@@ -90,6 +94,11 @@ def feedbacks_user(request):
         'lead': lead,
         'user_feedbacks': user_feedbacks,
     }
+    print('СЛАВА УКРАИНЕ')
+    if request.method == 'POST' and 'create-integral' in request.POST:
+        print('ГЕРОЯМ СЛАВА')
+        integral = generate_feedback(settings.CURRENT_USER)
+        context['integral'] = integral
 
     return render(request, 'feedbacks_user.html', context)
 
@@ -107,18 +116,3 @@ def feedbacks(request):
     }
 
     return render(request, 'feedbacks.html', context)
-
-def feedbacks_user(request):
-    if isinstance(settings.CURRENT_USER, str):
-        return HttpResponseRedirect('/')
-
-    users = Users.objects.all()
-    current_user = settings.CURRENT_USER
-    feedback = Feedbacks.objects.all()
-    context = {
-        'users': users,
-        'current_user': current_user,
-        'feedback': feedback,
-    }
-
-    return render(request, 'feedbacks_user.html', context)

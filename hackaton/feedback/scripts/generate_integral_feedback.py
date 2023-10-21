@@ -16,8 +16,11 @@ nltk.download('stopwords')
 stops = nltk.corpus.stopwords.words('russian')
 unique_stops = set(stops)
 
-def get_feedback_objects(user):
-    return list(Feedbacks.objects.filter(user=user))
+def get_feedback_objects(user, teamlead=None):
+    if teamlead == None:
+        return list(Feedbacks.objects.filter(user=user))
+    else:
+        return list(Feedbacks.objects.filter(user=user, from_user=teamlead))
 
 def get_feedbacks_english(feedbacks):
     return list(map(lambda u: u.body_english if u.body_english != None else translate_to_english(u.body), feedbacks))
@@ -25,8 +28,8 @@ def get_feedbacks_english(feedbacks):
 def get_feedbacks_russian(feedbacks):
     return list(map(lambda u: u.body, feedbacks))
 
-def generate_feedback(user):
-  feedback_objects = get_feedback_objects(user)
+def generate_feedback(user, teamlead):
+  feedback_objects = get_feedback_objects(user, teamlead)
   reviews_russian = get_feedbacks_russian(feedback_objects)
   reviews_english = get_feedbacks_english(feedback_objects)
   single_russian = "\n".join(reviews_russian)
@@ -36,7 +39,7 @@ def generate_feedback(user):
   if len(adjectives) < 5:
       return "Недостаточно отзывов для анализа сотрудника"
   obj = {1: 'Негативный', 2: 'Нейтральный', 3: 'Положительный'}
-  feedback = f"Маркеры сотрудника: {adjectives}, средний отзыв: {obj[sent]}"
+  feedback = f"Маркеры сотрудника: {adjectives}, \n Cредний отзыв: {obj[sent]}"
   return feedback
 
 def extract_adjectives_from_text(text):
@@ -61,10 +64,13 @@ def extract_adjectives_from_text(text):
 
 def normalize_phrase(phrase):
     parsed_adjective = morph.parse(phrase.split(' ')[0])[0]
-    parsed_noun = morph.parse(phrase.split(' ')[1])[0]
+    normal_noun = morph.parse(phrase.split(' ')[1])[0].normal_form
+    print(normal_noun)
+    parsed_noun = morph.parse(normal_noun)[0]
+    print(parsed_noun)
     case = parsed_noun.tag.case
     number = parsed_noun.tag.number
     if case == None or number == None:
         return None
     transformed_adjective = parsed_adjective.inflect({case, number}).word
-    return f"{transformed_adjective} {phrase.split(' ')[1]}"
+    return f"{transformed_adjective} {normal_noun}"

@@ -797,3 +797,13 @@ form textarea {
 .text-center {
     margin-bottom: 50px;
 }
+
+.disabled-div{
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 50%;
+  border: 3px dashed transparent;
+  margin-left: auto;
+  margin-right: auto;
+}
