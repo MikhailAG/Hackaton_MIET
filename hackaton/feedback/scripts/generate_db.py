@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append('/home/windof/hakaton/Hackaton_MIET/hackaton')
+sys.path.append('/Users/mikhail/PycharmProjects/Hackaton_MIET/hackaton')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hackaton.settings'
 import django
 django.setup()
