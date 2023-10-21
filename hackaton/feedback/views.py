@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.apps import apps
 from .scripts.auth_script import authfunc
 from django.conf import settings
+from feedback.scripts.translator import translate_to_english
+from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.generate_integral_feedback import generate_feedback
 
 Users = apps.get_model('feedback', 'Users')
 Feedbacks = apps.get_model('feedback', 'Feedbacks')
@@ -56,6 +59,22 @@ def worker_user(request):
         'lead_interns': lead_interns
     }
 
+    if request.method == 'POST' and 'feedback-text' in request.POST:
+        feedback = request.POST['feedback-text']
+        body_english = translate_to_english(feedback)
+        Feedbacks.objects.create(
+            body=feedback,
+            body_english=body_english,
+            stars=sentiment(body_english),
+            user_id=intern_id,
+            from_user_id=settings.CURRENT_USER.id
+        )
+        print(Feedbacks.objects.last())
+
+    if request.method == 'POST' and 'create-integral' in request.POST:
+        integral = generate_feedback(intern)
+        context['integral'] = integral
+
     return render(request, 'worker_user.html', context)
 
 def feedbacks_user(request):
@@ -75,6 +94,11 @@ def feedbacks_user(request):
         'lead': lead,
         'user_feedback': user_feedback,
     }
+    print('СЛАВА УКРАИНЕ')
+    if request.method == 'POST' and 'create-integral' in request.POST:
+        print('ГЕРОЯМ СЛАВА')
+        integral = generate_feedback(settings.CURRENT_USER)
+        context['integral'] = integral
 
     return render(request, 'feedbacks_user.html', context)
 
