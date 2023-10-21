@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.apps import apps
 from .scripts.auth_script import authfunc
 from django.conf import settings
 
 Users = apps.get_model('feedback', 'Users')
 Feedbacks = apps.get_model('feedback', 'Feedbacks')
+
 def auth(request):
     if request.method == 'POST' and 'login-app' in request.POST:
         username = request.POST['username']
@@ -16,15 +17,67 @@ def auth(request):
             print('Роль пользователя:', settings.CURRENT_USER.role_id)
             request.session['role'] = settings.CURRENT_USER.role_id
             request.session['name'] = settings.CURRENT_USER.name
-            return HttpResponseRedirect('worker')
+            if settings.CURRENT_USER.role.name == 'Intern':
+                return HttpResponseRedirect('feedbacks')
+            else:
+                return HttpResponseRedirect('all_workers')
     return render(request, 'auth.html')
 
-def worker(request):
+def all_workers(request):
     if isinstance(settings.CURRENT_USER, str):
         return HttpResponseRedirect('/')
 
     users = Users.objects.all()
     current_user = settings.CURRENT_USER
     feedback = Feedbacks.objects.all()
+    context = {
+        'users': users,
+        'current_user': current_user,
+        'feedback': feedback,
+    }
 
-    return render(request, 'worker.html',{'users': users, 'current_user': current_user, 'feedback': feedback})
+    return render(request, 'all_workers.html', context)
+
+def worker_user(request):
+    if isinstance(settings.CURRENT_USER, str):
+        return HttpResponseRedirect('/')
+
+    users = Users.objects.all()
+    current_user = settings.CURRENT_USER
+    feedback = Feedbacks.objects.all()
+    context = {
+        'users': users,
+        'current_user': current_user,
+        'feedback': feedback,
+    }
+    return render(request, 'worker_user.html', context)
+
+def feedbacks(request):
+    if isinstance(settings.CURRENT_USER, str):
+        return HttpResponseRedirect('/')
+
+    users = Users.objects.all()
+    current_user = settings.CURRENT_USER
+    feedback = Feedbacks.objects.all()
+    context = {
+        'users': users,
+        'current_user': current_user,
+        'feedback': feedback,
+    }
+
+    return render(request, 'feedbacks.html', context)
+
+def feedbacks_user(request):
+    if isinstance(settings.CURRENT_USER, str):
+        return HttpResponseRedirect('/')
+
+    users = Users.objects.all()
+    current_user = settings.CURRENT_USER
+    feedback = Feedbacks.objects.all()
+    context = {
+        'users': users,
+        'current_user': current_user,
+        'feedback': feedback,
+    }
+
+    return render(request, 'feedbacks_user.html', context)

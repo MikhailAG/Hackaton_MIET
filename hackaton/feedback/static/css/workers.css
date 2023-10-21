@@ -175,16 +175,16 @@ body {
   color: var(--sidebar-main-color);
 }
 
-.app-content.feedback{
+.app-content {
   padding: 16px;
   background-color: var(--app-bg);
   height: 100%;
   flex: 1;
   max-height: 100%;
-  display: none;
   flex-direction: column;
 }
-.app-content.employee{
+
+.app-content.employee, .app-content.feedback{
   padding: 16px;
   background-color: var(--app-bg);
   height: 100%;
