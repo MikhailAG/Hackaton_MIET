@@ -9,7 +9,7 @@ django.setup()
 from feedback.models import Feedbacks
 from feedback.models import Users
 from feedback.scripts.textblob_script import sentiment
-from feedback.scripts.translator import translate_to_russian
+from feedback.scripts.translator import translate_to_english
 
 morph = pymorphy2.MorphAnalyzer(lang='ru')
 nltk.download('stopwords')
@@ -20,7 +20,7 @@ def get_feedback_objects(user):
     return list(Feedbacks.objects.filter(user=user))
 
 def get_feedbacks_english(feedbacks):
-    return list(map(lambda u: u.body_english if u.body_english != None else translate_to_russian(u.body), feedbacks))
+    return list(map(lambda u: u.body_english if u.body_english != None else translate_to_english(u.body), feedbacks))
 
 def get_feedbacks_russian(feedbacks):
     return list(map(lambda u: u.body, feedbacks))

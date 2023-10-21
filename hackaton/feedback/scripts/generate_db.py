@@ -8,22 +8,8 @@ from feedback.models import Roles
 from feedback.models import Feedbacks
 import names
 import random
-from textblob import TextBlob
-import translators as ts
-
-def sentiment(text):
-  eng = to_eng(text)
-  testimonial = TextBlob(eng)
-  sent = testimonial.sentiment.polarity
-  if sent <= 0:
-    return 1
-  if sent < 0.33:
-    return 2
-  return 3
-
-def to_eng(text):
-  transes = ['bing', 'google', 'alibaba', 'baidu']
-  return ts.translate_text(from_language='ru', to_language='en', query_text=text, translator=random.choice(transes))
+from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.translator import translate_to_english
 
 roles = [1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
@@ -79,7 +65,7 @@ employee_reviews = [
 for text in employee_reviews:
   Feedbacks.objects.create(
     body=text,
-    body_english=to_eng(text),
+    body_english=translate_to_english(text),
     stars=sentiment(text),
     user=Users.objects.filter(role= Roles.objects.filter(name='Intern').first()).order_by('?').first(),
     from_user=Users.objects.filter(role= Roles.objects.filter(name='Teamlead').first()).order_by('?').first()
