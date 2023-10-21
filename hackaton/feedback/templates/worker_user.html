@@ -1,53 +1,52 @@
-<head>{% load static %}<link rel="stylesheet" href="{% static 'css/worker.css' %}">
-    <script src="{% static 'js/show.js' %}"></script></head>
+<head>
+  {% extends 'base_slider.html' %}
+  {% load static %}
+  {% block content %}
+  <link rel="stylesheet" href="{% static 'css/workers.css' %}">
+  <script src="{% static 'js/worker.js' %}"></script>
+  <script src="{% static 'js/show.js' %}"></script>
+  <title>FeedbackApp</title>
+</head>
 <div class="employee-page">
-		<h1 class="card-fullname">Корнеев А. Г.</h1>
-		<h2 class="card-jobtitle">UI разработчик</h2>
+		<h1 class="card-fullname">{{ intern.name }}</h1>
+		<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
 		<div class="feedbacks">
-			<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
+			{% if feedback.first.body == '' %}
+				<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
+			{% endif %}
+			{% for fb in feedback %}
 			<div class="feedback-row">
-				<div class='task'>
-				  <div class="name-status">
-					  <div class='task__tags'>Сотрудник В.</div>
-					  <div class="product-cell status-cell">
-					  <span class="status positive">Позитивный</span>
-					  </div>
+			<div class='task'>
+			  <div class="name-status">
+				  <div class="product-cell status-cell">
+				  <span class="status {%if fb.stars == 1%}negative{%endif%}
+					{%if fb.stars == 2%}neutral{%endif%}
+					{%if fb.stars == 3%}positive{%endif%}">
+					{%if fb.stars == 1%}Негативный{%endif%}
+					{%if fb.stars == 2%}Нейтральный{%endif%}
+				    {%if fb.stars == 3%}Позитивный{%endif%}</span>
 				  </div>
-				  <p>Пришел на работу на 3 минуты раньше!</p>
-				  <div class='task__stats'>
-					<p>20.10.23</p>
-				  </div>
-				</div>
+			  </div>
+			  <p>{{ fb.body }}</p>
 			</div>
-			<div class="feedback-row">
-				<div class='task'>
-				  <div class="name-status">
-					  <div class='task__tags'>Сотрудник Г.</div>
-					  <div class="product-cell status-cell">
-					  <span class="status negative">Негативный</span>
-					  </div>
-				  </div>
-				  <p>Опоздал на работу на 3 минуты!</p>
-				  <div class='task__stats'>
-					<i class="fas fa-flag"></i><p>22.10.23</p>
-				  </div>
-				</div>
 			</div>
-		</div>
+			{% endfor %}
 		<div class="employee-container">
-		  <form method="post">
-				<h1 class="title text-center mb-4">Написать отзыв:</h1>
-				<div class="form-group message">
-					<textarea name="feedback-text" id="formMessage" class="form-control form-control-lg" rows="7" placeholder="пишите..."></textarea>
-				</div>
-					<div class="btns">
-				<div class="text-center">
-					<button type="button" class="btn btn-exit employee">Назад</button>
-				</div>
-				<div class="text-center">
-					<button type="submit" class="btn btn-primary" name="send-feedback" tabIndex="-1">Отправить</button>
-				</div>
-				</div>
+		  <form method="post" name="send-feedback">
+			<h1 class="title text-center mb-4">Написать отзыв:</h1>
+			<div class="form-group message">
+			  <textarea name="feedback-text" id="formMessage" class="form-control form-control-lg" rows="7" placeholder="пишите..."></textarea>
+			</div>
+		    <div class="btns">
+			<div class="text-center">
+			  <a href="all_workers"><button type="button" class="btn btn-exit employee">Назад</button></a>
+			</div>
+			<div class="text-center">
+				<a href=""><button type="submit" class="btn btn-primary" tabIndex="-1">Отправить</button></a>
+			</div>
+			</div>
 		  </form>
 		</div>
     </div>
+</div>
+{% endblock %}
