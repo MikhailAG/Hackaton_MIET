@@ -62,7 +62,7 @@ body {
 
 .sidebar {
   flex-basis: 200px;
-  max-width: 200px;
+  max-width: 350px;
   flex-shrink: 0;
   background-color: var(--sidebar);
   display: flex;
@@ -729,7 +729,7 @@ form textarea {
   margin-top: 50px;
 }
 
-.employee-page, .feedback-page {
+.feedback-page, .employee-page {
     display: none;
     text-align: center;
     margin-left: auto;
