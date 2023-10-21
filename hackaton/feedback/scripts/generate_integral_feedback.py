@@ -1,7 +1,7 @@
 import os, sys
 import django
 import re
-import pymorphy2
+import pymorphy3
 import nltk
 sys.path.append('/home/windof/hakaton/Hackaton_MIET/hackaton')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hackaton.settings'
@@ -11,7 +11,7 @@ from feedback.models import Users
 from feedback.scripts.textblob_script import sentiment
 from feedback.scripts.translator import translate_to_english
 
-morph = pymorphy2.MorphAnalyzer(lang='ru')
+morph = pymorphy3.MorphAnalyzer(lang='ru')
 nltk.download('stopwords')
 stops = nltk.corpus.stopwords.words('russian')
 unique_stops = set(stops)

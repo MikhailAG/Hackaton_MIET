@@ -72,7 +72,7 @@ def worker_user(request):
         print(Feedbacks.objects.last())
 
     if request.method == 'POST' and 'create-integral' in request.POST:
-        integral = generate_feedback(intern)
+        integral = generate_feedback(intern, None)
         context['integral'] = integral
 
     return render(request, 'worker_user.html', context)
@@ -94,10 +94,8 @@ def feedbacks_user(request):
         'lead': lead,
         'user_feedback': user_feedback,
     }
-    print('СЛАВА УКРАИНЕ')
     if request.method == 'POST' and 'create-integral' in request.POST:
-        print('ГЕРОЯМ СЛАВА')
-        integral = generate_feedback(settings.CURRENT_USER)
+        integral = generate_feedback(settings.CURRENT_USER, None)
         context['integral'] = integral
 
     return render(request, 'feedbacks_user.html', context)
