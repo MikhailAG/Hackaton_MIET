@@ -747,7 +747,6 @@ form textarea {
 .btns {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 150px;
     width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -794,4 +793,7 @@ form textarea {
 }
 .feedbacks {
     margin-top: 50px;
+}
+.text-center {
+    margin-bottom: 50px;
 }
