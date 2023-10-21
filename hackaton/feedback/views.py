@@ -67,13 +67,13 @@ def feedbacks_user(request):
     current_user = settings.CURRENT_USER
     feedback = Feedbacks.objects.all()
     lead = feedback.get(id=fb_id).from_user
-    user_feedbacks = feedback.filter(user_id=current_user.id)
+    user_feedback = feedback.get(id=fb_id)
     context = {
         'users': users,
         'current_user': current_user,
         'feedback': feedback,
         'lead': lead,
-        'user_feedbacks': user_feedbacks,
+        'user_feedback': user_feedback,
     }
 
     return render(request, 'feedbacks_user.html', context)
