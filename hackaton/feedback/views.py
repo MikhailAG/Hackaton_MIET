@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.apps import apps
 from .scripts.auth_script import authfunc
 from django.conf import settings
+from feedback.scripts.translator import translate_to_english
+from feedback.scripts.textblob_script import sentiment
 
 Users = apps.get_model('feedback', 'Users')
 Feedbacks = apps.get_model('feedback', 'Feedbacks')
@@ -81,3 +83,16 @@ def feedbacks_user(request):
     }
 
     return render(request, 'feedbacks_user.html', context)
+
+def worker_user(request):
+    if isinstance(settings.CURRENT_USER, str):
+        return HttpResponseRedirect('/')
+    if request.method == 'POST' and 'send-feedback' in request.POST:
+        feedback = request.POST['feedback-text']
+        body_english = translate_to_english(feedback)
+        Feedbacks.objects.create(
+            body=feedback,
+            body_english=body_english,
+            stars=sentiment(body_english)
+        )
+
