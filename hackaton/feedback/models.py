@@ -3,6 +3,7 @@ from django.db import models
 class Users(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey('Roles', on_delete=models.CASCADE)
+    lead_user = models.ForeignKey('Users', on_delete=models.CASCADE, blank=True, null=True)
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=256)
 

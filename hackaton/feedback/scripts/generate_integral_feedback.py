@@ -9,20 +9,30 @@ django.setup()
 from feedback.models import Feedbacks
 from feedback.models import Users
 from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.translator import translate_to_russian
 
 morph = pymorphy2.MorphAnalyzer(lang='ru')
 nltk.download('stopwords')
 stops = nltk.corpus.stopwords.words('russian')
 unique_stops = set(stops)
 
-def get_user_feedbacks(user):
-    return list(Feedbacks.objects.filter(user=user).values_list('body', flat=True))
+def get_feedback_objects(user):
+    return list(Feedbacks.objects.filter(user=user))
+
+def get_feedbacks_english(feedbacks):
+    return list(map(lambda u: u.body_english if u.body_english != None else translate_to_russian(u.body), feedbacks))
+
+def get_feedbacks_russian(feedbacks):
+    return list(map(lambda u: u.body, feedbacks))
 
 def generate_feedback(user):
-  reviews = get_user_feedbacks(user)
-  single = "\n".join(reviews)
-  sent = sentiment(single)
-  adjectives = extract_adjectives_from_text(single)
+  feedback_objects = get_feedback_objects(user)
+  reviews_russian = get_feedbacks_russian(feedback_objects)
+  reviews_english = get_feedbacks_english(feedback_objects)
+  single_russian = "\n".join(reviews_russian)
+  single_english = "\n".join(reviews_english)
+  sent = sentiment(single_english)
+  adjectives = extract_adjectives_from_text(single_russian)
   if len(adjectives) < 5:
       return "Недостаточно отзывов для анализа сотрудника"
   obj = {1: 'Негативный', 2: 'Нейтральный', 3: 'Положительный'}
@@ -58,3 +68,5 @@ def normalize_phrase(phrase):
         return None
     transformed_adjective = parsed_adjective.inflect({case, number}).word
     return f"{transformed_adjective} {phrase.split(' ')[1]}"
+
+print(generate_feedback(Feedbacks.objects.order_by('?').first().user))
