@@ -10,6 +10,7 @@
 <div class="employee-page">
 		<h1 class="card-fullname">{{ intern.name }}</h1>
 		<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
+		{% if intern.role.name == 'Intern'%}
 		<div class="feedbacks">
 			{% if feedback.first.body == '' %}
 				<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
@@ -48,5 +49,20 @@
 		  </form>
 		</div>
     </div>
+	{% endif %}
+	{% if intern.role.name == 'Teamlead'%}
+	<div class="feedbacks">
+		{% if lead_interns.first.name != '' %}
+			<h2 class="card-feedbacks">Стажеры сотрудника:</h2>
+		{% endif %}
+		{% for user in lead_interns %}
+		<a href="worker_user?id={{ user.id }}"><div class="feedback-row">
+			<div class='task'>
+			  <p>{{ user.name }}</p>
+			</div>
+		</div>
+		{% endfor %}
+    </div>
+	{% endif %}
 </div>
 {% endblock %}

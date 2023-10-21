@@ -47,11 +47,13 @@ def worker_user(request):
     current_user = settings.CURRENT_USER
     feedback = Feedbacks.objects.filter(user_id=intern_id)
     intern = users.get(id=intern_id)
+    lead_interns = users.filter(lead_user=intern)
     context = {
         'users': users,
         'current_user': current_user,
         'intern': intern,
         'feedback': feedback,
+        'lead_interns': lead_interns
     }
 
     return render(request, 'worker_user.html', context)
