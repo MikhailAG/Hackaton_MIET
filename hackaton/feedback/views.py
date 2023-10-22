@@ -123,6 +123,10 @@ def feedbacks(request):
         'feedback': feedback,
     }
 
+    if request.method == 'POST' and 'create-integral' in request.POST:
+        integral = generate_feedback(settings.CURRENT_USER, None)
+        context['integral'] = integral
+
     return render(request, 'feedbacks.html', context)
 
 def notifications(request):

@@ -3,12 +3,12 @@ import django
 import pymorphy3
 from nltk import *
 
-sys.path.append('/Users/mikhail/PycharmProjects/Hackaton_MIET/hackaton')
+sys.path.append('/home/windof/hakaton/Hackaton_MIET/hackaton')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hackaton.settings'
 django.setup()
 
 from feedback.models import Feedbacks
-from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.textblob_script import sentiment, rating
 from feedback.scripts.translator import translate_to_english
 
 morph = pymorphy3.MorphAnalyzer(lang='ru')
@@ -39,7 +39,7 @@ def generate_feedback(user, teamlead):
   if len(adjectives) < 5:
       return "Недостаточно отзывов для анализа сотрудника"
   obj = {1: 'Негативный', 2: 'Нейтральный', 3: 'Положительный'}
-  feedback = f"Маркеры сотрудника: {adjectives}, \n Cредний отзыв: {obj[sent]}"
+  feedback = f"Маркеры сотрудника: {adjectives}, \n Cредний отзыв: {obj[sent]}, Рейтинг сотрудника: {rating(single_english)}"
   return feedback
 
 def extract_adjectives_from_text(text):
