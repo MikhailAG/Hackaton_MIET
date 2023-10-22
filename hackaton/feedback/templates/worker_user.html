@@ -10,12 +10,12 @@
 <div class="employee-page">
 	<h1 class="card-fullname">{{ intern.name }}</h1>
 	<h2 class="card-jobtitle">{{ intern.role.name }}</h2>
+	{% if intern.role.name == 'Intern' %}
 	<form method="POST">
 		{% csrf_token %}
 		<button name="create-integral" class="app-content-headerButton" type="submit">Интегральный отзыв</button>
 		<div id="integral_text" class="disabled-div">{{ integral }}</div>
 	</form>
-	{% if intern.role.name == 'Intern' %}
 	<div class="feedbacks">
 		{% if feedback.first.body == '' %}
 			<h2 class="card-feedbacks">Отзывы о сотруднике:</h2>
@@ -81,18 +81,16 @@
 	</div>
 	{% endif %}
 	{% if intern.role.name == 'Teamlead' and current_user.role.name == 'Intern'%}
-	<div class="feedbacks">
-		<form method="POST">
-			<div class="btns">
-				<button type="button" class="btn choice-soft-skills">SOFT-SKILLS</button>
-				<input name='soft-skills' type="hidden" value=""/>
-				<button type="button" class="btn choice-hard-skills">HARD-SKILLS</button>
-				<input name='hard-skills' type="hidden" value=""/>
+		<div class="employee-container">
+			<form method="POST">
+				{% csrf_token %}
+				<div class="formhttps://www.gravatar.com/avatar/337e3dbd74fde6211d1a63f255ce5900?s=64&d=robohash-group message">
+					<textarea name="comment-text" id="formMessage" class="form-control form-control-lg" rows="7" placeholder="Оставьте комментарий..."></textarea>
+				</div>
+				<button type="submit" name="feedback-request" class="app-content-headerButton">Запросить отзыв</button>
+			</form>
 			</div>
-			<button name="feedback-request" class="app-content-headerButton">Запросить отзыв</button>
-		</form>
-    </div>
-    <a href="all_workers"><button type="button" class="btn btn-exit employee" style="margin-top: 100px;">Назад</button></a>
+			<a href="all_workers"><button type="button" class="btn btn-exit employee" style="margin-top: 100px;">Назад</button></a>
 	{% endif %}
 </div>
 {% endblock %}

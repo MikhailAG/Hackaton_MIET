@@ -4,11 +4,11 @@ from django.apps import apps
 from .scripts.auth_script import authfunc
 from django.conf import settings
 from feedback.scripts.translator import translate_to_english
-from feedback.scripts.textblob_script import sentiment
+from feedback.scripts.textblob_script import sentiment, objectivity
 from feedback.scripts.generate_integral_feedback import generate_feedback
-
-Users = apps.get_model('feedback', 'Users')
-Feedbacks = apps.get_model('feedback', 'Feedbacks')
+from feedback.models import Users
+from feedback.models import Feedbacks
+from feedback.models import Notifications
 
 def auth(request):
     if request.method == 'POST' and 'login-app' in request.POST:
@@ -66,10 +66,20 @@ def worker_user(request):
             body=feedback,
             body_english=body_english,
             stars=sentiment(body_english),
+            subjectivity=objectivity(body_english),
             user_id=intern_id,
-            from_user_id=settings.CURRENT_USER.id
+            from_user_id=current_user.id
         )
         print(Feedbacks.objects.last())
+
+    if request.method == 'POST' and 'comment-text' in request.POST:
+        comment = request.POST['comment-text']
+        Notifications.objects.create(
+            comment=comment,
+            lead=intern,
+            user=current_user
+        )
+        return HttpResponseRedirect('/all_workers')
 
     if request.method == 'POST' and 'create-integral' in request.POST:
         integral = generate_feedback(intern, None)
@@ -114,3 +124,17 @@ def feedbacks(request):
     }
 
     return render(request, 'feedbacks.html', context)
+
+def notifications(request):
+    if isinstance(settings.CURRENT_USER, str):
+        return HttpResponseRedirect('/')
+    nots = settings.CURRENT_USER.received_notifications.all()
+    print(settings.CURRENT_USER)
+    print(settings.CURRENT_USER.received_notifications.filter(is_read=False))
+    print(nots)
+    context = {
+        'notifications': nots,
+        'current_user': settings.CURRENT_USER
+    }
+    
+    return render(request, 'notifications.html', context)

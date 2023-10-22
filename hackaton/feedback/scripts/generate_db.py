@@ -1,15 +1,17 @@
 import django
 import os
 import sys
-
-sys.path.append('/Users/mikhail/PycharmProjects/Hackaton_MIET/hackaton')
+import names
+import random
+sys.path.append('/home/windof/hakaton/Hackaton_MIET/hackaton')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hackaton.settings'
 django.setup()
 
 from feedback.models import Users
 from feedback.models import Roles
 from feedback.models import Feedbacks
-from feedback.scripts.textblob_script import sentiment
+from feedback.models import Notifications
+from feedback.scripts.textblob_script import sentiment, objectivity
 from feedback.scripts.translator import translate_to_english
 
 roles = [1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
@@ -73,10 +75,12 @@ employee_reviews = [
 #   )
 
 for text in employee_reviews:
+    body_english=translate_to_english(text)
     Feedbacks.objects.create(
         body=text,
-        body_english=translate_to_english(text),
-        stars=sentiment(text),
+        body_english=body_english,
+        stars=sentiment(body_english),
+        subjectivity=objectivity(body_english),
         user=Users.objects.filter(role=Roles.objects.filter(name='Intern').first()).order_by('?').first(),
         from_user=Users.objects.filter(role=Roles.objects.filter(name='Teamlead').first()).order_by('?').first()
     )
